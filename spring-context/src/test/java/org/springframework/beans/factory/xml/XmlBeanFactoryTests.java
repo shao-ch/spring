@@ -247,6 +247,10 @@ class XmlBeanFactoryTests {
 
 	@Test
 	void innerBeansWithoutDestroy() {
+		/*下面的两个就相当于  newXmlBeanFactory();因为newXmlBeanFactory是继承了DefaultListableBeanFactory
+		并在其中自定义了XmlBeanDefinitionReader，将自己作为参数交给XmlBeanDefinitionReader，
+		相当于对DefaultListableBeanFactory的扩展
+		 */
 		DefaultListableBeanFactory xbf = new DefaultListableBeanFactory();
 		XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(xbf);
 		reader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_NONE);
@@ -277,6 +281,12 @@ class XmlBeanFactoryTests {
 		assertThat(innerFactory.getName()).isEqualTo(DummyFactory.SINGLETON_NAME);
 		TestBean inner5 = (TestBean) friends[2];
 		assertThat(inner5.getBeanName().startsWith("innerBean")).isTrue();
+	}
+
+	@Test
+	void schInnerBean(){
+		XmlBeanFactory factory = new XmlBeanFactory(new ClassPathResource("XmlBeanFactoryTests-autowire.xml"));
+		Object rod1 = factory.getBean("rod1");
 	}
 
 	@Test
